@@ -1,5 +1,4 @@
-const Benchmark = require('benchmark');
-const suite = new Benchmark.Suite;
+const suite = require('./core/suite')();
 const SortedArray = require('sorted-array');
 const OrderedArray = require('ordered-array');
 const SortedObjectArray = require('sorted-object-array');
@@ -58,7 +57,7 @@ suite.add('SortedArray(real case)', () => {
     }
 }).add('OrderedArray(objects)', () => {
     const array = new OrderedArray();
-    array.setEquals((a ,b) => a.id === b.id ? 0 : a.id < b.id ? -1 : 1);
+    array.setEquals((a = {}, b = {}) => a.id === b.id ? 0 : a.id < b.id ? -1 : 1);
     for(let i = 0; i < 100; i ++){
         array.insert({ id: v4() });
     }
@@ -74,8 +73,4 @@ suite.add('SortedArray(real case)', () => {
     for(let i = 0; i < 100; i ++){
         array.push({ id: v4() });
     }
-}).on('cycle', event => {
-    console.log(String(event.target));
-}).on('complete', function(){
-    console.log('Fastest is ' + this.filter('fastest').map('name'));
 }).run();

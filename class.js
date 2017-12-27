@@ -1,5 +1,4 @@
-const Benchmark = require('benchmark');
-const suite = new Benchmark.Suite;
+const suite = require('./core/suite')();
 
 class MyClass extends Array{
     constructor(){
@@ -25,7 +24,7 @@ MyFunctionClass.prototype = Array.prototype;
 function MyFunctionClass2(){
     Array.call(this, arguments);
 }
-MyFunctionClass2.prototype = Object.create(Array.prototype, {
+MyFunctionClass2.prototype = Object.assign({}, Array.prototype, {
     method: function(){
         this.a = 1;
         this.a ++;
@@ -52,8 +51,4 @@ suite.add('Function(instance)', () => {
     a2.method();
 }).add('Class(method call)', () => {
     b1.method();
-}).on('cycle', event => {
-    console.log(String(event.target));
-}).on('complete', function(){
-    console.log('Fastest is ' + this.filter('fastest').map('name'));
 }).run();
